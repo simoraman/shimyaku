@@ -1,16 +1,17 @@
-var feedView = {
-  render: function($parent, items){
-    var html = ['<article>',
-                '<h1>{{title}}</h1>',
-                '<p>{{}}</p>',
-                '</article>'].join('');
-    var template = Hogan.compile(html);
-    items = items.map(function(item){
-      return template.render(item);
-    });
+function feedView() {
+  return {
+    render: function(items){
+      var html = ['<article>',
+                  '<h1>{{title}}</h1>',
+                  '</article>'].join('');
+      var template = Hogan.compile(html);
+      items = items.map(function(item){
+        return template.render(item);
+      });
 
-    $parent.append(items);
-  }
+      $('#feed-items').append(items);
+    }
+  };
 };
 
 var feedService = {
@@ -21,9 +22,21 @@ var feedService = {
   }
 };
 
+function feedItemController() {
+  function pickFeedItems(feeds) {
+    return _.flatten(feeds, 'items');
+  }
+  return{
+    showFeedItems: function(getFeeds, render){
+      getFeeds(function(feeds){
+        var items = pickFeedItems(feeds);
+        render(items);
+      });
+    },
+    pickFeedItems: pickFeedItems
+  };
+};
 
 function main(){
- feedService.getFeeds(function(items){
-   feedView.render($('#feed-items'), items);
- });
+  feedItemController().showFeedItems(feedService.getFeeds, feedView().render);
 }

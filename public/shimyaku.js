@@ -2,7 +2,9 @@ function feedView() {
   return {
     render: function(items){
       var html = ['<article>',
-                  '<h1>{{title}}</h1>',
+                  '<a href="{{link}}">',
+                  '<h1>{{title}}</h1></a>',
+                  '<p>{{description}}</p>',
                   '</article>'].join('');
       var template = Hogan.compile(html);
       items = items.map(function(item){

@@ -24,3 +24,7 @@
 
 (defn get-feeds []
   (repo/find-all))
+
+(defn get-feeditems []
+  (let [feeds (repo/find-all)]
+    (filter (fn [x] (not= (:read x) true)) (mapcat :items feeds))))

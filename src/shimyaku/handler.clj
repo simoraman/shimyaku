@@ -12,6 +12,7 @@
 (defroutes app-routes
   (GET "/" [] (resp/file-response "index.html" {:root "public"}))
   (GET "/feeds" []  (get-feeds))
+  (GET "/feeditems" [] (get-feeditems))
   (route/resources "/")
   (route/files "/" {:root (str (System/getProperty "user.dir") "/public")})
   (route/not-found "Not Found"))

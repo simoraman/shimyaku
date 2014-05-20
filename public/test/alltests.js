@@ -41,4 +41,11 @@ describe('Feed controller', function(){
     feedItemController().showFeedItems(getter, render);
     render.calledWith(expected).should.be.true;
   });
+
+  it('read items are removed', function(){
+    var data = expected.slice();
+    data.push({"title" : "read", "read" : true});
+    var result = feedItemController().filterReadItems(data);
+    result.should.eql(expected);
+  });
 });

@@ -28,13 +28,19 @@ function feedItemController() {
   function pickFeedItems(feeds) {
     return _.flatten(feeds, 'items');
   }
+  function filterRead(items) {
+    return _.filter(items, function(item){
+      return item.read !== true;
+    });
+  }
   return{
     showFeedItems: function(getFeeds, render){
-      getFeeds(function(feeds){
-        var items = pickFeedItems(feeds);
+      getFeeds(function(feeds) {
+        var items = filterRead(pickFeedItems(feeds));
         render(items);
       });
     },
+    filterReadItems: filterRead,
     pickFeedItems: pickFeedItems
   };
 };

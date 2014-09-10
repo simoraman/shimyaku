@@ -28,7 +28,20 @@ describe('Feed controller', function(){
     }
   ];
 
-  var expected = [{ "title": "Star City" }, { "title": "untitled" },{ "title": "The Engine That Does More" }];
+  var expected = [
+    { "title": "Star City",
+      "feedId":"5184de0be86ac43878000001",
+      "feedName": "Feed 1"
+    },
+    { "title": "untitled",
+      "feedName": "Feed 1",
+      "feedId":"5184de0be86ac43878000001"
+    },
+    { "title": "The Engine That Does More",
+      "feedId":"5184de34e86ac43878000002",
+      "feedName": "Feed 2"
+    }
+  ];
 
   it('makes one list of feed items', function(){
     var result = feedItemController().pickFeedItems(testData);
@@ -47,5 +60,9 @@ describe('Feed controller', function(){
     data.push({"title" : "read", "read" : true});
     var result = feedItemController().filterReadItems(data);
     result.should.eql(expected);
+  });
+
+  it('can mark item as read', function(){
+
   });
 });

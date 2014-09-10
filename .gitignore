@@ -9,3 +9,5 @@
 /target
 .lein-repl-history
 /public/node_modules
+
+*.log

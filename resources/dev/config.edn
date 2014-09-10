@@ -1,2 +1,2 @@
-{:db "mongodb://127.0.0.1/local"}
-{:collection "feedsTest"}
+{:db "mongodb://127.0.0.1/local"
+ :collection "feeds"}

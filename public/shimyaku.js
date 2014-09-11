@@ -1,13 +1,12 @@
-function feedView() {
-  function removeFromDom(event){
-    $(event.target).parent().fadeOut();
+function feedView(model) {
+  var that = this;
+  that.model = model;
+  function removeFromDom(){
+    $('.read[value="true"]').parent().fadeOut();
   }
-  function markAsRead(event){
-    var article = $(event.target).parent();
-    article.append('<input type="hidden" class="read" value="true"/>');
+  function serializeFeed(article, v){
     var id = article.find('.feed-id').val();
     var feedItems = $($.find('.feed-id[value="'+ id +'"]')).parent();
-
     var feedName = $(feedItems[0]).find('.feed-name').val();
     var feedId = $(feedItems[0]).find('.feed-id').val();
     var items = _.map(feedItems, function(item){
@@ -19,15 +18,12 @@ function feedView() {
       itemObject.read = $item.find('.read').val()==="true" ? true : false;
       return itemObject;
     });
-    var persistentFeed = {"_id":feedId, "title":feedName, "items":items};
-    $.ajax({
-      type: 'POST',
-      url: '/feeds',
-      contentType:"application/json; charset=utf-8",
-      dataType: 'json',
-      data: JSON.stringify(persistentFeed)
-    });
-
+    return {"_id":feedId, "title":feedName, "items":items};
+  }
+  function markAsRead(event){
+    var article = $(event.target).parent();
+    article.append('<input type="hidden" class="read" value="true"/>');
+    return article;
   }
   return {
     render: function(items){
@@ -47,8 +43,10 @@ function feedView() {
       $('#feed-items').append(items);
 
       $('button.mark-read').asEventStream('click')
-        //.doAction(removeFromDom)
-        .onValue(markAsRead);
+        .map(markAsRead)
+        .map(serializeFeed)
+        .doAction(removeFromDom)
+        .onValue(that.model.updateFeed);
     }
   };
 };
@@ -58,7 +56,16 @@ var feedService = {
     $.getJSON('/feeds', function(data){
       callback(data);
     });
-  }
+  },
+  updateFeed: function(feed){
+      $.ajax({
+        type: 'POST',
+        url: '/feedsasd',
+        contentType:"application/json; charset=utf-8",
+        dataType: 'json',
+        data: JSON.stringify(feed)
+      });
+    }
 };
 
 function feedItemController() {
@@ -90,5 +97,5 @@ function feedItemController() {
 };
 
 function main(){
-  feedItemController().showFeedItems(feedService.getFeeds, feedView().render);
+  feedItemController().showFeedItems(feedService.getFeeds, feedView(feedService).render);
 }
